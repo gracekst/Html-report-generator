@@ -11,8 +11,8 @@ struct company_info
 struct customer_info
 {
     char name_lastname[40];
+    char phone_number[15];
     char address[80];
-    char phone_number[10];
 };
 
 int main(void)
@@ -43,17 +43,15 @@ int main(void)
     fgets(tmp, 40, stdin);
     strcpy(customer.name_lastname, tmp);
 
+    printf("Phone number: ");
+    fgets(tmp, 20, stdin);
+    strcpy(customer.phone_number, tmp);
+    
     printf("Address: ");
     fgets(tmp, 80, stdin);
     strcpy(customer.address, tmp);
 
-    printf("Phone number: ");
-    fgets(tmp, 10, stdin);
-    strcpy(customer.phone_number, tmp);
-    printf("\n");
-
     //get: number of item customer bought
-    printf("Item information\n");
     int item_number = 0;
     do
     {
@@ -61,24 +59,13 @@ int main(void)
         scanf("%d", &item_number);
     }
     while(item_number < 0);
-    //get: item info and assign to struct
-    char item_name[item_number][20];
-    float price[item_number];
-    for(int i = 0; i < item_number; i++)
-    {
-        printf("Item name: ");
-        scanf("%s", item_name[i]);
-
-        printf("price: ");
-        scanf("%f", &price[i]);
-    }
 
     //time and date
     time_t t;
     time(&t);
     
     fprintf(output, "<!DOCTYPE html>\n");
-    fprintf(output, "<html>");
+    fprintf(output, "<html>\n");
     //header
     fprintf(output, "<head><title>Invoice</title></head>\n");
     //body
@@ -94,11 +81,20 @@ int main(void)
     fprintf(output, "<p>Name: %s</p>\n", customer.name_lastname);
     fprintf(output, "<p>Phone number: %s</p>\n", customer.phone_number);
     fprintf(output, "<p>Address: %s</p>\n", customer.address);
-    fprintf(output, "<br></br>\n");
     //item_info
+    float total_price = 0;
     for(int i = 0; i < item_number; i++)
     {
-        fprintf(output,"<p style=\"text-align:right;>%s\t\t\t\t\t\t\t%f</p>\n", item_name[i], item_price[i]);
+        char item_name[20];
+        printf("Item name(without space): ");
+        scanf("%s", item_name);
+        fprintf(output, "<p text-align: left>%s</p>", item_name);
+
+        float price;
+        printf("price: ");
+        scanf("%f", &price);
+        fprintf(output, "<p text-align: right>%.2f</p>", price);
+        total_price = total_price + price;
     }
     fprintf(output, "<p style=\"text-align:right;>%f</p>\n", total_price);
     fprintf(output, "</body>\n");
