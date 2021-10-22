@@ -76,6 +76,33 @@ int main(void)
     //time and date
     time_t t;
     time(&t);
+    
+    fprintf(output, "<!DOCTYPE html>\n");
+    fprintf(output, "<html>");
+    //header
+    fprintf(output, "<head><title>Invoice</title></head>\n");
+    //body
+    fprintf(output, "<body>\n");
+    //company info
+    fprintf(output, "<h1 style=\"letter-spacing: 5px; text-align: center; font-size: 35px; gap: 50px\">INVOICE</h1>\n");
+    fprintf(output, "<h2>Company name: %s</h2>\n", company.name);
+    fprintf(output, "<p>Date/Time: %s</p>\n",ctime(&t));
+    fprintf(output, "<p>Phone number: %s</p>\n", company.phone_number);
+    fprintf(output, "<p>Website: %s</p>\n", company.website);
+    //customer info
+    fprintf(output, "<h2>Bill to:</h2>\n");
+    fprintf(output, "<p>Name: %s</p>\n", customer.name_lastname);
+    fprintf(output, "<p>Phone number: %s</p>\n", customer.phone_number);
+    fprintf(output, "<p>Address: %s</p>\n", customer.address);
+    fprintf(output, "<br></br>\n");
+    //item_info
+    for(int i = 0; i < item_number; i++)
+    {
+        fprintf(output,"<p style=\"text-align:right;>%s\t\t\t\t\t\t\t%f</p>\n", item_name[i], item_price[i]);
+    }
+    fprintf(output, "<p style=\"text-align:right;>%f</p>\n", total_price);
+    fprintf(output, "</body>\n");
+    fprintf(output, "</html>\n");
 
     fclose(output);
 
