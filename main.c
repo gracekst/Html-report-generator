@@ -2,6 +2,8 @@
 #include <string.h>
 #include <time.h>
 
+float print_item(int item_number, FILE *output);
+
 struct company_info
 {
     char name[20];
@@ -64,25 +66,36 @@ int main(void)
     time_t t;
     time(&t);
     
-    fprintf(output, "<!DOCTYPE html>\n");
-    fprintf(output, "<html>\n");
+    fprintf(output, "<!DOCTYPE html>");
+    fprintf(output, "<html>");
     //header
-    fprintf(output, "<head><title>Invoice</title></head>\n");
+    fprintf(output, "<head><title>Invoice</title></head>");
     //body
-    fprintf(output, "<body>\n");
+    fprintf(output, "<body>");
     //company info
-    fprintf(output, "<h1 style=\"letter-spacing: 5px; text-align: center; font-size: 35px; gap: 50px\">INVOICE</h1>\n");
-    fprintf(output, "<h2>Company name: %s</h2>\n", company.name);
-    fprintf(output, "<p>Date/Time: %s</p>\n",ctime(&t));
-    fprintf(output, "<p>Phone number: %s</p>\n", company.phone_number);
-    fprintf(output, "<p>Website: %s</p>\n", company.website);
+    fprintf(output, "<h1 style=\"letter-spacing: 5px; text-align: center; font-size: 35px; gap: 50px\">INVOICE</h1>");
+    fprintf(output, "<h2>Company name: %s</h2>", company.name);
+    fprintf(output, "<p>Date/Time: %s</p>",ctime(&t));
+    fprintf(output, "<p>Phone number: %s</p>", company.phone_number);
+    fprintf(output, "<p>Website: %s</p>", company.website);
     //customer info
-    fprintf(output, "<h2>Bill to:</h2>\n");
-    fprintf(output, "<p>Name: %s</p>\n", customer.name_lastname);
-    fprintf(output, "<p>Phone number: %s</p>\n", customer.phone_number);
-    fprintf(output, "<p>Address: %s</p>\n", customer.address);
+    fprintf(output, "<h2>Bill to:</h2>");
+    fprintf(output, "<p>Name: %s</p>", customer.name_lastname);
+    fprintf(output, "<p>Phone number: %s</p>", customer.phone_number);
+    fprintf(output, "<p>Address: %s</p>", customer.address);
     //item_info
-    float total_price = 0;
+    float total_price = print_item(item_number, output);
+    fprintf(output, "<p style=\"text-align:right;>%f</p>", total_price);
+    fprintf(output, "</body>");
+    fprintf(output, "</html>");
+
+    fclose(output);
+
+}
+
+float print_item(int item_number, FILE *output)
+{
+    float total = 0;
     for(int i = 0; i < item_number; i++)
     {
         char item_name[20];
@@ -94,15 +107,8 @@ int main(void)
         printf("price: ");
         scanf("%f", &price);
         fprintf(output, "<p text-align: right>%.2f</p>", price);
-        total_price = total_price + price;
+        total = total+ price;
     }
-    fprintf(output, "<p style=\"text-align:right;>%f</p>\n", total_price);
-    fprintf(output, "</body>\n");
-    fprintf(output, "</html>\n");
-
-    fclose(output);
-
-
+    return total;
 }
-
 
