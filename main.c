@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void print_item_and_total(int item_number, FILE *output);
+void print_item_and_total(float vat, int item_number, FILE *output);
 
 struct company_info
 {
@@ -52,6 +52,10 @@ int main(void)
     fgets(tmp, 80, stdin);
     strcpy(customer.address, tmp);
 
+    float vat;
+    printf("Vat: ");
+    scanf("%f", &vat);
+    
     //get: number of item customer bought
     int item_number = 0;
     do
@@ -90,7 +94,7 @@ int main(void)
     fprintf(output,"<th>Item name</th>\n");
     fprintf(output,"<th>Quantity</th>\n");
     fprintf(output,"<th>Price</th>\n");
-    print_item_and_total(item_number, output);
+    print_item_and_total(vat, item_number, output);
     fprintf(output,"</tr>\n");
     fprintf(output,"</table>\n");
     fprintf(output,"</body>\n");
@@ -100,7 +104,7 @@ int main(void)
 
 }
 
-void print_item_and_total(int item_number, FILE *output)
+void print_item_and_total(float vat, int item_number, FILE *output)
 {
     float total = 0;
     for(int i = 0; i < item_number; i++)
@@ -119,12 +123,17 @@ void print_item_and_total(int item_number, FILE *output)
         float price;
         printf("price: ");
         scanf("%f", &price);
-        fprintf(output,"<td>%f</td>\n", price*quantity);
+        fprintf(output,"<td>%.2f</td>\n", price*quantity);
         total = total+ (price*quantity);
         fprintf(output,"</tr>\n");
     }
     fprintf(output,"<tr>\n");
+    fprintf(output,"<td>Vat %.2f %%</td>\n", vat);
+    fprintf(output,"<td colspan=\"2\">%.2f</td>\n", total*(vat/100));
+    total = total + total*(vat/100);
+    
+    fprintf(output,"<tr>\n");
     fprintf(output,"<td>Total</td>\n");
-    fprintf(output,"<td colspan=\"2\">%f</td>\n", total);
+    fprintf(output,"<td colspan=\"2\">%.2f</td>\n", total);
 }
 
