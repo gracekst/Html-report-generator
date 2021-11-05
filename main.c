@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include <time.h>
 
-float print_item(int item_number, FILE *output);
+void print_item_and_total(int item_number, FILE *output);
 
 struct company_info
 {
@@ -61,54 +60,71 @@ int main(void)
         scanf("%d", &item_number);
     }
     while(item_number < 0);
-
-    //time and date
-    time_t t;
-    time(&t);
     
-    fprintf(output, "<!DOCTYPE html>");
-    fprintf(output, "<html>");
-    //header
-    fprintf(output, "<head><title>Invoice</title></head>");
-    //body
-    fprintf(output, "<body>");
-    //company info
-    fprintf(output, "<h1 style=\"letter-spacing: 5px; text-align: center; font-size: 35px; gap: 50px\">INVOICE</h1>");
-    fprintf(output, "<h2>Company name: %s</h2>", company.name);
-    fprintf(output, "<p>Date/Time: %s</p>",ctime(&t));
-    fprintf(output, "<p>Phone number: %s</p>", company.phone_number);
-    fprintf(output, "<p>Website: %s</p>", company.website);
-    //customer info
-    fprintf(output, "<h2>Bill to:</h2>");
-    fprintf(output, "<p>Name: %s</p>", customer.name_lastname);
-    fprintf(output, "<p>Phone number: %s</p>", customer.phone_number);
-    fprintf(output, "<p>Address: %s</p>", customer.address);
-    //item_info
-    float total_price = print_item(item_number, output);
-    fprintf(output, "<p style=\"text-align:right;>%f</p>", total_price);
-    fprintf(output, "</body>");
-    fprintf(output, "</html>");
+    fprintf(output, "<!DOCTYPE>\n");
+    fprintf(output,"<html>\n");
+    fprintf(output,"<head>\n");
+    fprintf(output,"<title>Html report generator</title>\n");
+    fprintf(output,"<style>\n");
+    fprintf(output,"table, td, th{border: 1px solid black}\n");
+    fprintf(output,"th{font-size: 20px; background-color: #D1D1CB; height 55px;}\n");
+    fprintf(output,"td{font-size: 20px; text-align: right; height: 40px;}\n");
+    fprintf(output,"table{width: 100%%; border-collapse: collapse;}\n");
+    fprintf(output,"h1{text-align: center; font-size: 35px;}\n");
+    fprintf(output,".input[font-size: 20px; text-align: left; width: 50px;}\n");
+    fprintf(output,"</style>\n");
+    fprintf(output,"</head>\n");
+    fprintf(output,"<body>\n");
+    fprintf(output,"<h1>Invoice</h1>\n");
+    fprintf(output,"<div class=\"input\">\n");
+    fprintf(output,"<b>[%s]</b>", company.name);
+    fprintf(output,"<p>Phone number: %s", company.phone_number);
+    fprintf(output,"<p>Website: %s", company.website);
+    fprintf(output,"<p><br><b>Bill To:</b></p>\n");
+    fprintf(output,"<p>%s</p>\n", customer.name_lastname);
+    fprintf(output,"<p>%s</p>\n", customer.phone_number);
+    fprintf(output,"<p>%s</p>\n", customer.address);
+    fprintf(output,"</div>\n");
+    fprintf(output,"<table>\n");
+    fprintf(output,"<tr>\n");
+    fprintf(output,"<th>Item name</th>\n");
+    fprintf(output,"<th>Quantity</th>\n");
+    fprintf(output,"<th>Price</th>\n");
+    print_item_and_total(item_number, output);
+    fprintf(output,"</tr>\n");
+    fprintf(output,"</table>\n");
+    fprintf(output,"</body>\n");
+    fprintf(output, "</html>\n");
 
     fclose(output);
 
 }
 
-float print_item(int item_number, FILE *output)
+void print_item_and_total(int item_number, FILE *output)
 {
     float total = 0;
     for(int i = 0; i < item_number; i++)
     {
+        fprintf(output,"<tr>\n");
         char item_name[20];
         printf("Item name(without space): ");
         scanf("%s", item_name);
-        fprintf(output, "<p text-align: left>%s</p>", item_name);
-
+        fprintf(output,"<td>%s</td>\n", item_name);
+        
+        int quantity;
+        printf("Quatity: ");
+        scanf("%d", &quantity);
+        fprintf(output,"<td>%d</td>\n", quantity);
+        
         float price;
         printf("price: ");
         scanf("%f", &price);
-        fprintf(output, "<p text-align: right>%.2f</p>", price);
+        fprintf(output,"<td>%f</td>\n", price*quantity);
         total = total+ price;
+        fprintf(output,"</tr>\n");
     }
-    return total;
+    fprintf(output,"<tr>\n");
+    fprintf(output,"<td>Total</td>\n");
+    fprintf(output,"<td colspan=\"2\">%f</td>\n", total);
 }
 
