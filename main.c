@@ -120,7 +120,7 @@ void print_item_and_total(int item_number, FILE *output)
         printf("price: ");
         scanf("%f", &price);
         fprintf(output,"<td>%f</td>\n", price*quantity);
-        total = total+ price;
+        total = total+ (price*quantity);
         fprintf(output,"</tr>\n");
     }
     fprintf(output,"<tr>\n");
