@@ -42,6 +42,10 @@ int main(void)
     }
     while(vat < 0);
     
+    const int MAX_LINE = 80;
+    char line[MAX_LINE] = {0};
+    unsigned int line_count = 0;
+    
     FILE *file = fopen(filename, "r");
     //check file
     if(file == NULL)
