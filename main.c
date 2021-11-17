@@ -1,18 +1,19 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 void print_item_and_total(float vat, int item_number, FILE *output);
 
 struct company_info
 {
-    char name[20];
-    char phone_number[15];
+    char name[30];
+    char phone_number[30];
     char website[30];
 };
 struct customer_info
 {
-    char name_lastname[40];
-    char phone_number[15];
+    char name_lastname[30];
+    char phone_number[30];
     char address[80];
 };
 
