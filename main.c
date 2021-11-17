@@ -18,44 +18,11 @@ struct customer_info
 
 int main(void)
 {
-    //open a file
-    FILE *output;
-    output = fopen("Invoice.html", "w");
-    //get: company info and assign to struct
-    printf("Company information\n");
-    struct company_info company;
-    char tmp[80];
-    printf("Company name: ");
-    fgets(tmp, 20, stdin);
-    strcpy(company.name, tmp);
+    //input: filename
+    char filename[20];
+    printf("Input filename: ");
+    fgets(filename, 20, stdin);
 
-    printf("Company phone number: ");
-    fgets(tmp, 15, stdin);
-    strcpy(company.phone_number, tmp);
-
-    printf("Company website: ");
-    fgets(tmp, 30, stdin);
-    strcpy(company.website, tmp);
-
-    //get: customer info and assign to struct
-    printf("Customer information\n");
-    struct customer_info customer;
-    printf("Customer name: ");
-    fgets(tmp, 40, stdin);
-    strcpy(customer.name_lastname, tmp);
-
-    printf("Phone number: ");
-    fgets(tmp, 20, stdin);
-    strcpy(customer.phone_number, tmp);
-    
-    printf("Address: ");
-    fgets(tmp, 80, stdin);
-    strcpy(customer.address, tmp);
-
-    float vat;
-    printf("Vat: ");
-    scanf("%f", &vat);
-    
     //get: number of item customer bought
     int item_number = 0;
     do
@@ -65,6 +32,47 @@ int main(void)
     }
     while(item_number < 0);
     
+    //input: vat
+    float vat = 0;
+    do
+    {
+        printf("Vat: ");
+        scanf("%f", &vat);
+    }
+    while(vat < 0);
+    
+    FILE *file = fopen(filename, "r");
+    //check file
+    if(file == NULL)
+    {
+        printf("Can't open a file");
+        exit(1);
+    }
+    
+    struct company_info company;
+    struct customer_info customer;
+    
+    //read from file and assign each line to struct
+    while (fgets(line, MAX_LINE, file))
+    {
+        ++line_count;
+        if(line_count == 1)
+            strcpy(company.name, line);
+        else if(line_count == 2)
+            strcpy(company.phone_number, line);
+        else if(line_count == 3)
+            strcpy(company.website, line);
+        else if(line_count == 4)
+            strcpy(customer.name_lastname, line);
+        else if(line_count == 5)
+            strcpy(customer.phone_number, line);
+        else if(line_count == 6)
+            strcpy(customer.address, line);
+    }
+    fclose(file);
+    
+    //writing an output file with html code
+    FILE *output = fopen("output.html", "w");
     fprintf(output, "<!DOCTYPE>\n");
     fprintf(output,"<html>\n");
     fprintf(output,"<head>\n");
