@@ -20,9 +20,9 @@ struct customer_info
 int main(void)
 {
     //input: filename
-    char filename[20];
+    char filename[20] = "";
     printf("Input filename: ");
-    fgets(filename, 20, stdin);
+    scanf("%s", filename);
 
     //get: number of item customer bought
     int item_number = 0;
