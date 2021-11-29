@@ -1,9 +1,5 @@
-# Html-report-generator  
-  
-  
-## Project Description
+# HTML report generator
 This program is a html report generator which generating an invoice html file. Users will be asked to input 2 files which are company and customer informaion file and item information file.  
-  
   
 **Company and customer information file**
 The file should have 6 information, each of them separae by newline character(6 lines in total)   
@@ -19,5 +15,5 @@ The file should have 6 information, each of them separae by newline character(6 
 **Item information file**
 The file should consists of number of total amount of items customer bought, and list of item information(name, quantity, price), each of them should all be separate by a newline character.  
   
-## By
+# By
 Kasita Sansanthad 64011426
