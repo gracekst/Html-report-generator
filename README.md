@@ -1,6 +1,7 @@
 # Html-report-generator  
   
-**Project Description**  
+  
+## Project Description
 This program is a html report generator which generating an invoice html file. Users will be asked to input 2 files which are company and customer informaion file and item information file.  
   
   
