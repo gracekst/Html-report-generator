@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define VAR_SIZE 30
 void print_item_and_total(float vat, int item_number, FILE *output);
 
 struct company_info
@@ -46,9 +47,9 @@ int main(void)
     struct customer_info customer;
     char *assign_struct[6] = {company.name, company.phone_number, company.website, customer.name_lastname, customer.phone_number, customer.address};
     
-    FILE *file = fopen(filename, "r");
+    FILE *info_file = fopen(filename, "r");
     //check file
-    if(file == NULL)
+    if(info_file == NULL)
     {
         printf("Can't open a file");
         exit(1);
@@ -63,8 +64,6 @@ int main(void)
         i++;
     }
     fclose(info_file);
-
-    fclose(file);
     
     //writing an output file with html code
     FILE *output = fopen("output.html", "w");
