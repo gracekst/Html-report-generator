@@ -3,37 +3,29 @@
 #include <string.h>
 
 #define VAR_SIZE 30
-void print_item_and_total(float vat, int item_number, FILE *output);
 
 struct company_info
 {
-    char name[30];
-    char phone_number[30];
-    char website[30];
+    char name[VAR_SIZE];
+    char phone_number[VAR_SIZE];
+    char website[VAR_SIZE];
 };
 struct customer_info
 {
-    char name_lastname[30];
-    char phone_number[30];
-    char address[80];
+    char name_lastname[VAR_SIZE];
+    char phone_number[VAR_SIZE];
+    char address[VAR_SIZE];
 };
+struct item_info
+{
+    char name[VAR_SIZE];
+    char quantity[VAR_SIZE];
+    char price[VAR_SIZE];
+};
+
 
 int main(void)
 {
-    //input: filename
-    char filename[20] = "";
-    printf("Input filename: ");
-    scanf("%s", filename);
-
-    //get: number of item customer bought
-    int item_number = 0;
-    do
-    {
-        printf("Number of items customer bought: ");
-        scanf("%d", &item_number);
-    }
-    while(item_number < 0);
-    
     //input: vat
     float vat = 0;
     do
@@ -42,20 +34,23 @@ int main(void)
         scanf("%f", &vat);
     }
     while(vat < 0);
-    
+
+    //company, customer info part
+    char info_filename[VAR_SIZE] = {0};
+    printf("Input company and customer info filename: ");
+    scanf("%s", info_filename);
+
     struct company_info company;
     struct customer_info customer;
     char *assign_struct[6] = {company.name, company.phone_number, company.website, customer.name_lastname, customer.phone_number, customer.address};
-    
-    FILE *info_file = fopen(filename, "r");
-    //check file
+
+    FILE *info_file = fopen(info_filename, "r");
     if(info_file == NULL)
     {
         printf("Can't open a file");
         exit(1);
     }
-    
-    //read from file and assign each line to struct
+
     char line[VAR_SIZE];
     int i = 0;
     while(fgets(line, VAR_SIZE, info_file))
@@ -64,7 +59,51 @@ int main(void)
         i++;
     }
     fclose(info_file);
-    
+
+    //item info part
+    char item_filename[VAR_SIZE] = {0};
+    printf("Input item info filename: ");
+    scanf("%s", item_filename);
+
+    FILE *file = fopen(item_filename, "w");
+    fprintf(file, "2\npizza\n1\n199\nfries\n1\n59\n");
+    fclose(file);
+
+    int item_amount;
+    char tmp[VAR_SIZE] = {0};
+    FILE *read_file = fopen("test.txt", "r");
+    fgets(tmp, VAR_SIZE, read_file);
+    item_amount = atoi(tmp);
+
+    struct item_info item[item_amount];
+    char tmp2[100] = {0};
+    fread(&tmp2, sizeof(char), 100, read_file);
+
+    char *item_tmp = strtok(tmp2, "\n");
+    int count = 1;
+    int struct_count = 0;
+    while(item_tmp != NULL)
+    {
+        if(count % 3 == 1)
+        {
+            strcpy(item[struct_count].name, item_tmp);
+        }
+        else if(count % 3 == 2)
+        {
+            strcpy(item[struct_count].quantity, item_tmp);
+        }
+        else if(count % 3 == 0)
+        {
+            strcpy(item[struct_count].price, item_tmp);
+            struct_count++;
+        }
+        printf("count: %d  ", count);
+        printf("%s\n", item_tmp);
+        count++;
+        item_tmp = strtok(NULL,"\n");
+    }
+    fclose(read_file);
+
     //writing an output file with html code
     FILE *output = fopen("output.html", "w");
     fprintf(output, "<!DOCTYPE>\n");
@@ -96,36 +135,17 @@ int main(void)
     fprintf(output,"<th>Item name</th>\n");
     fprintf(output,"<th>Quantity</th>\n");
     fprintf(output,"<th>Price</th>\n");
-    print_item_and_total(vat, item_number, output);
-    fprintf(output,"</tr>\n");
-    fprintf(output,"</table>\n");
-    fprintf(output,"</body>\n");
-    fprintf(output, "</html>\n");
-
-    fclose(output);
-
-}
-
-void print_item_and_total(float vat, int item_number, FILE *output)
-{
     float total = 0;
-    for(int i = 0; i < item_number; i++)
+    for(int i = 0; i < item_amount; i++)
     {
         fprintf(output,"<tr>\n");
-        char item_name[20];
-        printf("Item name(without space): ");
-        scanf("%s", item_name);
-        fprintf(output,"<td>%s</td>\n", item_name);
-        
-        int quantity;
-        printf("Quatity: ");
-        scanf("%d", &quantity);
-        fprintf(output,"<td>%d</td>\n", quantity);
-        
-        float price;
-        printf("price: ");
-        scanf("%f", &price);
-        fprintf(output,"<td>%.2f</td>\n", price*quantity);
+        fprintf(output,"<td>%s</td>\n", item[i].name);
+
+        fprintf(output,"<td>%s</td>\n", item[i].quantity);
+
+        fprintf(output,"<td>%s</td>\n", item[i].price);
+        int quantity = atoi(item[i].quantity);
+        float price = atof(item[i].price);
         total = total+ (price*quantity);
         fprintf(output,"</tr>\n");
     }
@@ -133,9 +153,16 @@ void print_item_and_total(float vat, int item_number, FILE *output)
     fprintf(output,"<td>Vat %.2f %%</td>\n", vat);
     fprintf(output,"<td colspan=\"2\">%.2f</td>\n", total*(vat/100));
     total = total + total*(vat/100);
-    
+
     fprintf(output,"<tr>\n");
     fprintf(output,"<td>Total</td>\n");
     fprintf(output,"<td colspan=\"2\">%.2f</td>\n", total);
+    fprintf(output,"</tr>\n");
+    fprintf(output,"</table>\n");
+    fprintf(output,"</body>\n");
+    fprintf(output, "</html>\n");
+
+    fclose(output);
+
 }
 
