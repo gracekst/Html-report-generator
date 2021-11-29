@@ -42,9 +42,9 @@ int main(void)
     }
     while(vat < 0);
     
-    const int MAX_LINE = 80;
-    char line[MAX_LINE] = {0};
-    unsigned int line_count = 0;
+    struct company_info company;
+    struct customer_info customer;
+    char *assign_struct[6] = {company.name, company.phone_number, company.website, customer.name_lastname, customer.phone_number, customer.address};
     
     FILE *file = fopen(filename, "r");
     //check file
@@ -54,26 +54,16 @@ int main(void)
         exit(1);
     }
     
-    struct company_info company;
-    struct customer_info customer;
-    
     //read from file and assign each line to struct
-    while (fgets(line, MAX_LINE, file))
+    char line[VAR_SIZE];
+    int i = 0;
+    while(fgets(line, VAR_SIZE, info_file))
     {
-        ++line_count;
-        if(line_count == 1)
-            strcpy(company.name, line);
-        else if(line_count == 2)
-            strcpy(company.phone_number, line);
-        else if(line_count == 3)
-            strcpy(company.website, line);
-        else if(line_count == 4)
-            strcpy(customer.name_lastname, line);
-        else if(line_count == 5)
-            strcpy(customer.phone_number, line);
-        else if(line_count == 6)
-            strcpy(customer.address, line);
+        strcpy(assign_struct[i], line);
+        i++;
     }
+    fclose(info_file);
+
     fclose(file);
     
     //writing an output file with html code
