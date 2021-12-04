@@ -1,4 +1,3 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -24,6 +23,11 @@ struct item_info
     char price[VAR_SIZE];
 };
 
+//declare struct
+struct company_info company;
+struct customer_info customer;
+
+void printing_html_code(struct company_info *company,struct customer_info *customer, struct item_info *item, int item_amount, float vat);
 
 int main(void)
 {
@@ -41,9 +45,6 @@ int main(void)
     printf("Input company and customer info filename: ");
     scanf("%s", info_filename);
 
-    //declare struct
-    struct company_info company;
-    struct customer_info customer;
     char *assign_struct[6] = {company.name, company.phone_number, company.website, customer.name_lastname, customer.phone_number, customer.address};
 
     //open a file in read mode
@@ -104,6 +105,11 @@ int main(void)
     }
     fclose(read_file);
 
+    printing_html_code(&company, &customer, item, item_amount, vat);
+}
+
+void printing_html_code(struct company_info *company,struct customer_info *customer, struct item_info *item, int item_amount, float vat)
+{
     //writing an output file with html code
     FILE *output = fopen("output.html", "w");
     fprintf(output, "<!DOCTYPE>\n");
@@ -122,13 +128,13 @@ int main(void)
     fprintf(output,"<body>\n");
     fprintf(output,"<h1>Invoice</h1>\n");
     fprintf(output,"<div class=\"input\">\n");
-    fprintf(output,"<b>[%s]</b>", company.name);
-    fprintf(output,"<p>Phone number: %s", company.phone_number);
-    fprintf(output,"<p>Website: %s", company.website);
+    fprintf(output,"<b>[%s]</b>", company->name);
+    fprintf(output,"<p>Phone number: %s", company->phone_number);
+    fprintf(output,"<p>Website: %s", company->website);
     fprintf(output,"<p><br><b>Bill To:</b></p>\n");
-    fprintf(output,"<p>%s</p>\n", customer.name_lastname);
-    fprintf(output,"<p>%s</p>\n", customer.phone_number);
-    fprintf(output,"<p>%s</p>\n", customer.address);
+    fprintf(output,"<p>%s</p>\n", customer->name_lastname);
+    fprintf(output,"<p>%s</p>\n", customer->phone_number);
+    fprintf(output,"<p>%s</p>\n", customer->address);
     fprintf(output,"</div>\n");
     fprintf(output,"<table>\n");
     fprintf(output,"<tr>\n");
@@ -163,5 +169,4 @@ int main(void)
     fprintf(output, "</html>\n");
 
     fclose(output);
-
 }
