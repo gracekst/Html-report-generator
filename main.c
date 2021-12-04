@@ -73,6 +73,11 @@ int main(void)
     int item_amount;
     char tmp[VAR_SIZE] = {0};
     FILE *read_file = fopen(item_filename, "r");
+    if(read_file == NULL)
+    {
+        printf("Can't open a file");
+        exit(1);
+    }
     //get item amount from a first line of item info file
     fgets(tmp, VAR_SIZE, read_file);
     item_amount = atoi(tmp);
