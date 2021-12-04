@@ -1,8 +1,9 @@
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#define VAR_SIZE 30
+#define VAR_SIZE 50
 
 struct company_info
 {
@@ -40,10 +41,12 @@ int main(void)
     printf("Input company and customer info filename: ");
     scanf("%s", info_filename);
 
+    //declare struct
     struct company_info company;
     struct customer_info customer;
     char *assign_struct[6] = {company.name, company.phone_number, company.website, customer.name_lastname, customer.phone_number, customer.address};
 
+    //open a file in read mode
     FILE *info_file = fopen(info_filename, "r");
     if(info_file == NULL)
     {
@@ -65,16 +68,15 @@ int main(void)
     printf("Input item info filename: ");
     scanf("%s", item_filename);
 
-    FILE *file = fopen(item_filename, "w");
-    fprintf(file, "2\npizza\n1\n199\nfries\n1\n59\n");
-    fclose(file);
-
+    //open a file in read mode
     int item_amount;
     char tmp[VAR_SIZE] = {0};
-    FILE *read_file = fopen("test.txt", "r");
+    FILE *read_file = fopen(item_filename, "r");
+    //get item amount from a first line of item info file
     fgets(tmp, VAR_SIZE, read_file);
     item_amount = atoi(tmp);
 
+    //read from file and assign to a array of struct
     struct item_info item[item_amount];
     char tmp2[100] = {0};
     fread(&tmp2, sizeof(char), 100, read_file);
@@ -97,8 +99,6 @@ int main(void)
             strcpy(item[struct_count].price, item_tmp);
             struct_count++;
         }
-        printf("count: %d  ", count);
-        printf("%s\n", item_tmp);
         count++;
         item_tmp = strtok(NULL,"\n");
     }
@@ -165,4 +165,3 @@ int main(void)
     fclose(output);
 
 }
-
